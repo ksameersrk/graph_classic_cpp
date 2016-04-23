@@ -13,6 +13,7 @@ class Node
         friend class Graph;
         
     public:
+    	//constructor
         Node(int name, const vector<int>& v)
         : name_(name)
         {
@@ -22,6 +23,7 @@ class Node
             }
         }
         
+        //destructor
         ~Node()
         {
         }
@@ -61,6 +63,7 @@ class Node
             //rhs.neighbours_ = NULL;
         }
         
+        //move assignment
         Node& operator=(Node&& rhs)
         {
             if(this != &rhs)
