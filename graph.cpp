@@ -11,7 +11,8 @@ class Node
         int name_;
         map<int, int> neighbours_;
         friend class Graph;
-        
+ 
+	//constructor       
     public:
         Node(int name, const vector<int>& v)
         : name_(name)
