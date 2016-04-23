@@ -2,6 +2,7 @@
 #include <vector>
 #include <map>
 #include <algorithm>
+//#include <stack>
 //#include <cstring>
 using namespace std;
 
@@ -73,19 +74,25 @@ class Node
             }
             return *this;
         }
-        
+        /*
+		int operator*(const Node& nd)
+		{
+			return nd.name_;
+		}
+		*/
 };
 
 class Graph
 {
     private:
         vector<Node> graph_;
-        int source_;
-        int destination_;
-
+        Node source_;
+        Node destination_;
+        //Node* source_;
+        //Node* destination_;
     public:
         Graph(const vector<vector<int>>& matrix,
-                int source=0, int destination=0) 
+                Node source=Node(), Node destination=Node()) 
         : source_(source), destination_(destination)
         {
             for(int i=0; i<matrix.size(); i++)
@@ -107,6 +114,44 @@ class Graph
                 cout << "\n";
             }
         }
+		/*
+		dfs_iterator begin()
+		{
+			return dfs_iterator(source);
+		}
+		dfs_iterator end()
+		{
+			return dfs_iterator(destination);
+		}
+		*/
+		class dfs_iterator
+		{
+			private:
+			Node* sc;
+			//stack<Node*> s;
+
+			public:
+			dfs_iterator() { } 
+			dfs_iterator(Node* p) : sc(p) { }
+			
+			//dereferencing			
+			/*Node operator*()
+			{	
+				return *sc;
+			}*/
+			int operator*()
+			{
+				return sc->name_;
+			}
+			bool operator==(dfs_iterator& rhs)
+			{
+				return sc == rhs.sc;
+			}
+			bool operator!=(dfs_iterator& rhs)
+			{
+				return !(sc == rhs.sc);
+			}
+		};	
 
 };
 
@@ -131,8 +176,11 @@ int main()
 {
     int N;
     cin >> N;
-    vector<vector<int>> adjacency_matrix = input(N);
-    Graph g(adjacency_matrix);
-    g.display();
+    //vector<vector<int>> adjacency_matrix = input(N);
+    //Graph g(adjacency_matrix);
+    //g.display();
+
+	Graph g();
+	g.add(Node(),Node(),3);
     return 0;
 }
