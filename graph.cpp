@@ -13,7 +13,12 @@ class Node
         friend class Graph;
         
     public:
-    	//constructor
+    	//default constructor
+    	Node()
+    	:name_(-1)
+    	{}
+
+    	//parametrized constructor
         Node(int name, const vector<int>& v)
         : name_(name)
         {
@@ -82,13 +87,12 @@ class Graph
 {
     private:
         vector<Node> graph_;
-        int source_;
-        int destination_;
-
+        Node source_;
+        Node destination_;
     public:
         Graph(const vector<vector<int>>& matrix,
-                int source=0, int destination=0) 
-        : source_(source), destination_(destination)
+                Node src = Node(),Node dest = Node()) 
+        : source_(src), destination_(dest)
         {
             for(int i=0; i<matrix.size(); i++)
             {
@@ -109,6 +113,39 @@ class Graph
                 cout << "\n";
             }
         }
+
+        //bfs iterator
+        class bfs_iterator
+        {
+        	private:
+        	Node *pt_;
+
+        	//constructor
+        	bfs_iterator(Node *rhs)
+        	:pt_(rhs){}
+
+        	//dereferencing
+        	int operator *()
+        	{
+        		return pt_->name_;
+        	}
+
+        	bool operator ==(bfs_iterator rhs)
+        	{
+        		return pt_ == rhs.pt_;
+        	}
+
+        	bool operator !=(bfs_iterator rhs)
+        	{
+        		return !(pt_ == rhs.pt_);
+        	}
+
+        	Node operator ++()
+        	{
+        		//to be done
+        	}
+
+        };
 
 };
 
