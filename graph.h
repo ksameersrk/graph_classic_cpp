@@ -56,4 +56,4 @@ class Graph
         vector<string> topo_sort(iterator start_pt,iterator end_pt);
 
 };
-
+Graph::iterator myfind(Graph::iterator first, Graph::iterator last, string val);
