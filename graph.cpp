@@ -101,19 +101,7 @@ bool Graph::iterator::operator==(const iterator& rhs)
 }
 bool Graph::iterator::operator!=(const iterator& rhs)
 {
-    if(last || counter_ == graph_temp_.size()-1)
-    {
-        return false;
-    }
-    else
-    {
-        ++counter_;
-        if(*this == rhs)
-        {
-            last = true;
-        }
-        return true;
-    }
+	return ! (*this == rhs);
 }
 
 Graph::iterator& Graph::iterator::operator++() // pre
@@ -195,7 +183,6 @@ Graph::iterator Graph::make_itr(int c, string str)
 
 }
 
-
 vector<string> Graph::topo_sort(Graph::iterator start_pt,Graph::iterator end_pt)
 {
     vector<string> sorted;
@@ -207,4 +194,18 @@ vector<string> Graph::topo_sort(Graph::iterator start_pt,Graph::iterator end_pt)
     reverse(sorted.begin(),sorted.end()); 
 
     return sorted;
+}
+
+Graph::iterator myfind(Graph::iterator first, Graph::iterator last, string val)
+{	
+	while(first != last)
+	{
+		if(val.compare(*first) == 0)
+		{
+			break;
+		}
+		++first;
+	}
+
+	return first;
 }

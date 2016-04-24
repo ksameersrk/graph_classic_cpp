@@ -356,3 +356,17 @@ int main()
     disp(g.begin_dfs("Mumbai"), g.end_dfs("Delhi"));
     return 0;
 }
+
+/*if(last || counter_ == graph_temp_.size()-1)
+{
+    return false;
+}
+else
+{
+    ++counter_;
+    if(*this == rhs)
+    {
+        last = true;
+    }
+    return true;
+}*/
