@@ -6,6 +6,7 @@ class Graph
         vector<Node> graph_;
         vector<string> node_names_;
         map<string, int> name_index_;
+        Node dummy_node;
         
     public:
         //default ctor

@@ -118,17 +118,12 @@ Graph::iterator& Graph::iterator::operator++() // pre
     {
         visited[pt_->name_] = true;
     }
-
-    vector<int> temp;
     for(auto k : pt_->neighbours_)
     {
-            temp.push_back(k.first);
-    }
-
-    for(int i : temp) 
-    {
-        if(! visited[i])
-            cont.push_back(i);
+        if(! visited[k.first] && find(cont.begin(), cont.end(), k.first) == cont.end())
+        {
+            cont.push_back(k.first);
+        }
     }
     if(! cont.empty())
     {
@@ -144,6 +139,19 @@ Graph::iterator& Graph::iterator::operator++() // pre
             cont.pop_front();
         }
     }
+    
+    else
+    {
+        for(int i=0; i<graph_temp_.size(); i++)
+        {
+            if(! visited[i])
+            {
+                pt_ = &graph_temp_[i];
+                visited[i] = true;
+                break;
+            }
+        }
+    }
     return *this;
 }   
 
@@ -154,15 +162,15 @@ Graph::iterator Graph::iterator::operator++(int) // post
     return temp;
 }
     
-Graph::iterator Graph::begin_bfs(string str)
+Graph::iterator Graph::begin_bfs(string str="$$$")
 {
     return begin(BFS, str);
 }
-Graph::iterator Graph::end_bfs(string str)
+Graph::iterator Graph::end_bfs(string str="$$$")
 {
     return end(BFS, str);
 }
-Graph::iterator Graph::begin_dfs(string str)
+Graph::iterator Graph::begin_dfs(string str="$$$")
 {
     return begin(DFS, str);
 }
