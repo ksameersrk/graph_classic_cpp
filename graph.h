@@ -35,6 +35,7 @@ class Graph
             bool last = false;
             vector<string> node_names_;
             int check;
+            int counter_=0;
     
             public:
             iterator(Node* sc, vector<Node> graph_temp, vector<string> node_names,int c);
@@ -47,11 +48,12 @@ class Graph
         };
         
         iterator begin_bfs(string str);
-        iterator end_bfs(string str);
+        iterator end_bfs(string str="$$$");
         iterator begin_dfs(string str);
-        iterator end_dfs(string str);
-        iterator begin(int c, string str);
-        iterator end(int c, string str);
+        iterator end_dfs(string str="$$$");
+        iterator make_itr(int c, string str);
+
+        vector<string> topo_sort(iterator start_pt,iterator end_pt);
 
 };
 

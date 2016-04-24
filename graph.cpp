@@ -13,6 +13,9 @@ Graph::Graph(const vector<vector<int>>& matrix,
         Node tmp(i, matrix[i]);
         graph_.push_back(tmp);
     }
+    //dummy @end
+    graph_.push_back(Node(-1,vector<int>()));
+
     for(int i=0; i<node_names.size(); i++)
     {
         node_names_.push_back(node_names[i]);
@@ -98,12 +101,13 @@ bool Graph::iterator::operator==(const iterator& rhs)
 }
 bool Graph::iterator::operator!=(const iterator& rhs)
 {
-    if(last)
+    if(last || counter_ == graph_temp_.size()-1)
     {
         return false;
     }
     else
     {
+        ++counter_;
         if(*this == rhs)
         {
             last = true;
@@ -162,27 +166,45 @@ Graph::iterator Graph::iterator::operator++(int) // post
     return temp;
 }
     
-Graph::iterator Graph::begin_bfs(string str="$$$")
+Graph::iterator Graph::begin_bfs(string str)
 {
-    return begin(BFS, str);
+    return make_itr(BFS, str);
 }
-Graph::iterator Graph::end_bfs(string str="$$$")
+Graph::iterator Graph::end_bfs(string str)
 {
-    return end(BFS, str);
+    return make_itr(BFS, str);
 }
-Graph::iterator Graph::begin_dfs(string str="$$$")
+Graph::iterator Graph::begin_dfs(string str)
 {
-    return begin(DFS, str);
+    return make_itr(DFS, str);
 }
 Graph::iterator Graph::end_dfs(string str)
 {
-    return end(DFS, str);
+    return make_itr(DFS, str);
 }
-Graph::iterator Graph::begin(int c, string str)
+Graph::iterator Graph::make_itr(int c, string str)
 {
-    return iterator(&graph_[name_index_[str]], graph_, node_names_, c);
+    if(str.compare("$$$") == 0)
+    {
+        return iterator(&graph_[graph_.size()-1], graph_, node_names_, c);
+    }
+    else
+    {
+        return iterator(&graph_[name_index_[str]], graph_, node_names_, c);
+    }
+
 }
-Graph::iterator Graph::end(int c, string str)
+
+
+vector<string> Graph::topo_sort(Graph::iterator start_pt,Graph::iterator end_pt)
 {
-    return iterator(&graph_[name_index_[str]], graph_, node_names_, c);
+    vector<string> sorted;
+    while(start_pt != end_pt)
+    {
+        sorted.push_back(*start_pt);
+        ++start_pt;
+    }
+    reverse(sorted.begin(),sorted.end()); 
+
+    return sorted;
 }
