@@ -344,6 +344,14 @@ class Graph
                 return *this;
 
             }
+            
+            bfs_iterator operator ++(int)
+        	{
+        	    bfs_iterator temp(*this);
+        		++*this;
+                return temp;
+
+            }
 
         };
 
@@ -408,6 +416,17 @@ void disp(ptr first, ptr last)
     cout << endl;
 }
 
+template<typename ptr>
+void disp2(ptr first, ptr last)
+{
+    while(first != last)
+    {
+        cout << *first << "   ";
+        first++;
+    }
+    cout << endl;
+}
+
 int main()
 {
     int N;
@@ -416,13 +435,14 @@ int main()
     vector<vector<int>> adjacency_matrix = input_matrix(N);
     Graph g(adjacency_matrix, vertex_names, 0, 1);
     cout << "BFS : ";
-    disp(g.begin_bfs(), g.end_bfs());
-    cout << "DFS : ";
+    disp2(g.begin_bfs(), g.end_bfs());
+    /*cout << "DFS : ";
     disp(g.begin_dfs(), g.end_dfs());
     Graph h(g);
     cout << "BFS : ";
     disp(h.begin_bfs(), h.end_bfs());
     cout << "DFS : ";
     disp(h.begin_dfs(), h.end_dfs());
+    */
     return 0;
 }
