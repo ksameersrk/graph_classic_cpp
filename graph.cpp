@@ -3,7 +3,7 @@
 #include <map>
 #include <algorithm>
 #include <list>
-//#include <cstring>
+
 using namespace std;
 
 class Node
@@ -91,7 +91,7 @@ class Graph
         int source_;
         int destination_;
         vector<Node> graph_;
-
+        
     public:
         Graph(const vector<vector<int>>& matrix,
                 int src = 0,int dest = 0) 
@@ -104,18 +104,73 @@ class Graph
             }
         }
         
-        void display()
-        {
-            for(Node n : graph_)
-            {
-                cout << "name : " << n.name_ << " neighbours : \n";
-                for(auto k : n.neighbours_)
-                {
-                    cout << k.first << " " << k.second << endl;
-                } 
-                cout << "\n";
-            }
-        }
+		class dfs_iterator
+		{
+			private:
+			Node* pt_;
+			vector<Node> graph_temp_;	
+			bool* visited;
+			list<int> stack;
+			bool last = false; 
+			
+			public:
+			dfs_iterator(Node* sc, vector<Node> graph_temp)
+			:visited(new bool[graph_temp.size()]), pt_(sc), graph_temp_(graph_temp)
+			{
+				for(int i=0; i<graph_temp.size(); i++)
+					visited[i] = false;
+			}
+			int operator*()
+			{
+				return pt_->name_;
+			}
+			bool operator==(const dfs_iterator& rhs)
+			{
+				return pt_->name_ == rhs.pt_->name_;
+			}
+			bool operator!=(const dfs_iterator& rhs)
+			{
+				if(last)
+        		{
+        		    return false;
+        		}
+        		else
+        		{
+        		    if(*this == rhs)
+        		    {
+        		        last = true;
+        		    }
+        		    return true;
+        		}
+			}
+
+			dfs_iterator& operator++() // pre
+			{
+				if(! visited[pt_->name_])
+			    {
+			        visited[pt_->name_] = true;
+			    }
+				vector<int> temp;
+				for(auto k : pt_->neighbours_)
+				{
+					if(k.second > 0)
+						temp.push_back(k.first);
+				}
+		
+				for(int i : temp) 
+				{
+					if(! visited[i])
+						stack.push_back(i);
+				}
+				if(! stack.empty())
+				{
+				    pt_ = &graph_temp_[stack.back()];
+				    stack.pop_back();
+				}
+				return *this;
+			}	
+			
+		};
 
         //bfs iterator
         class bfs_iterator
@@ -202,17 +257,24 @@ class Graph
 
         };
 
-        bfs_iterator begin_g()
+        bfs_iterator begin_bfs()
         {
         	return bfs_iterator(&graph_[source_],graph_);
         }
 
-        bfs_iterator end_g()
+        bfs_iterator end_bfs()
         {
-            //cout << destination_ << endl;
         	return bfs_iterator(&graph_[destination_],graph_);
         }
 
+		dfs_iterator begin_dfs()
+		{
+			return dfs_iterator(&graph_[source_],graph_);
+		}
+		dfs_iterator end_dfs()
+		{
+			return dfs_iterator(&graph_[destination_],graph_);
+		}
 };
 
 vector<vector<int>> input(int N)
@@ -232,22 +294,26 @@ vector<vector<int>> input(int N)
     return v;
 }
 
+template<typename ptr>
+void disp(ptr first, ptr last)
+{
+    while(first != last)
+    {
+        cout << *first << "   ";
+        ++first;
+    }
+    cout << endl;
+}
+
 int main()
 {
     int N;
     cin >> N;
-    //names mapping
     vector<vector<int>> adjacency_matrix = input(N);
-    Graph g(adjacency_matrix,0,1);
-    //g.display();
-
-    auto it = g.begin_g();
-    auto end = g.end_g();
-    while(it != end)
-    {
-    	cout << *it << endl;
-    	++it;
-    }
-
+    Graph g(adjacency_matrix, 0, 1);
+    cout << "BFS : ";
+    disp(g.begin_bfs(), g.end_bfs());
+    cout << "DFS : ";
+    disp(g.begin_dfs(), g.end_dfs());
     return 0;
 }
