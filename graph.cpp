@@ -15,7 +15,7 @@ class Node
     public:
     	//default constructor
     	Node()
-    	:name_(-1)
+    	:name_()
     	{}
 
     	//parametrized constructor
