@@ -68,5 +68,8 @@ int main()
     //vector<string> test= g.topo_sort(g.begin_dfs("Belgaum"), g.end_dfs("Chennai"));
     #endif
     
+    cout << "BFS : ";
+    disp(g.begin_bfs("A30"), g.end_bfs("A18"));
+    
     return 0;
 }
