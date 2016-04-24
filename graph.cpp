@@ -51,13 +51,11 @@ class Node
             if(this != &rhs)
             {
                 name_ = rhs.name_;
-                map<int, int> m;
                 neighbours_.clear();
                 for(auto k : rhs.neighbours_)
                 {
-                    m.insert(k);
+                    neighbours_.insert(k);
                 }
-                neighbours_ = move(m);
             }
             return *this;
         }
@@ -93,6 +91,11 @@ class Graph
         vector<Node> graph_;
         
     public:
+        //default ctor
+        Graph()
+        {}
+
+        //constructor
         Graph(const vector<vector<int>>& matrix,
                 int src = 0,int dest = 0) 
         : source_(src), destination_(dest)
@@ -103,7 +106,61 @@ class Graph
                 graph_.push_back(tmp);
             }
         }
+
+        //destructor
+        ~Graph()
+        { }
         
+        //copy constructor
+        Graph(const Graph& rhs)
+        {
+            source_ = rhs.source_;
+            destination_ = rhs.destination_;
+            for(auto k : rhs.graph_)
+            {
+                graph_.push_back(k);
+            }
+        }
+        
+        //copy assignment
+        Graph& operator=(const Graph& rhs)
+        {
+            if(this != &rhs)
+            {
+                source_ = rhs.source_;
+                destination_ = rhs.destination_;
+                graph_.clear();
+                for(auto k : rhs.graph_)
+                {
+                    graph_.push_back(k);
+                }
+            }
+            return *this;
+        }
+        
+        //move constructor
+        Graph(Graph&& rhs)
+        : source_(rhs.source_),destination_(rhs.destination_)
+        {
+            rhs.source_ = -1;
+            rhs.destination_ = -1;
+            graph_ = move(rhs.graph_);
+        }
+        
+        //move assignment
+        Graph& operator=(Graph&& rhs)
+        {
+            if(this != &rhs)
+            {
+                source_ = rhs.source_;
+                destination_ = rhs.destination_;
+                graph_ = move(rhs.graph_);
+                rhs.source_ = -1;
+                rhs.destination_ = -1;
+            }
+            return *this;
+        }
+       
         class dfs_iterator
         {
             private:
