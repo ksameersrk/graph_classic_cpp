@@ -123,8 +123,8 @@ class Graph
         	private:
         	Node *pt_;
         	list<int> queue;
-        	vector<int> visited;
-        	vector<Node> temp_;
+        	bool *visited;
+        	vector<Node> graph_temp_;
         	bool last = false;
 
         	public:
@@ -135,7 +135,13 @@ class Graph
         	
         	//constructor
         	bfs_iterator(Node *rhs,vector<Node> g)
-        	:pt_(rhs),temp_(g){}
+        	:pt_(rhs), graph_temp_(g), visited(new bool[g.size()])
+        	{
+        	    for(int i=0; i<g.size(); i++)
+        	    {
+        	        visited[i] = false;
+        	    }
+        	}
 
 
         	//destructor
@@ -172,13 +178,13 @@ class Graph
         	bfs_iterator& operator ++()
         	{
         	    
-        		if(find(begin(visited),end(visited),pt_->name_) == visited.end())
+        		if(! visited[pt_->name_])
         		{
-        			visited.push_back(pt_->name_);
+        			visited[pt_->name_] = true;
         		}
         		for(auto k : pt_->neighbours_)
         		{	
-        			if(find(begin(visited), end(visited), k.first) == visited.end() &&
+        			if(! visited[k.first] &&
         			    find(begin(queue), end(queue), k.first) == queue.end() &&
         			    k.second > 0)
     				{
@@ -187,7 +193,7 @@ class Graph
     			}
     			if(!queue.empty())
     			{
-            		pt_ = &temp_[queue.front()];
+            		pt_ = &graph_temp_[queue.front()];
             		queue.pop_front();
                 }
         		return *this;
