@@ -2,3 +2,5 @@
 *.out
 *.cpp~
 *.gitignore~
+*.h~
+*.txt~
