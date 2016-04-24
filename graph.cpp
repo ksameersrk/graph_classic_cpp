@@ -87,11 +87,11 @@ class Graph
 {
     private:
         vector<Node> graph_;
-        Node source_;
-        Node destination_;
+        int source_;
+        int destination_;
     public:
         Graph(const vector<vector<int>>& matrix,
-                Node src = Node(),Node dest = Node()) 
+                int src = 0,int dest = 0) 
         : source_(src), destination_(dest)
         {
             for(int i=0; i<matrix.size(); i++)
@@ -170,6 +170,7 @@ int main()
 {
     int N;
     cin >> N;
+    //names mapping
     vector<vector<int>> adjacency_matrix = input(N);
     Graph g(adjacency_matrix);
     g.display();
