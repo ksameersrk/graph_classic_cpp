@@ -1,6 +1,6 @@
 graph : client.o graph.o node.o
 	g++ client.o graph.o node.o -o graph
-client.o : client.cpp graph.h
+client.o : client.cpp
 	g++ -std=c++14 -c client.cpp
 graph.o : graph.cpp
 	g++ -std=c++14 -c graph.cpp
