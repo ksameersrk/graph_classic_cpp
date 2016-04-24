@@ -134,6 +134,7 @@ Graph::iterator& Graph::iterator::operator++() // pre
     
     else
     {
+        counter_++;
         for(int i=0; i<graph_temp_.size(); i++)
         {
             if(! visited[i])
@@ -208,4 +209,15 @@ Graph::iterator myfind(Graph::iterator first, Graph::iterator last, string val)
 	}
 
 	return first;
+}
+
+
+int Graph::get_number_of_components(string city)
+{	
+    auto it = begin_bfs(city);
+    for(; it != end_bfs(); it++)
+    {
+        int x;
+    }
+    return it.counter_;
 }

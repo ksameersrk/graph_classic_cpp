@@ -24,6 +24,8 @@ class Graph
         Graph(Graph&& rhs);          
         //move assignment
         Graph& operator=(Graph&& rhs);
+        
+        int get_number_of_components(string city);
                
         class iterator
         {
@@ -35,9 +37,10 @@ class Graph
             bool last = false;
             vector<string> node_names_;
             int check;
-            int counter_=0;
+            
     
             public:
+            int counter_=0;
             iterator(Node* sc, vector<Node> graph_temp, vector<string> node_names,int c);
             string operator *();
             bool operator==(const iterator& rhs);

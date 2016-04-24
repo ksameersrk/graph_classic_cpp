@@ -67,6 +67,6 @@ int main()
     disp(g.begin_dfs("Belgaum"), g.end_dfs());
     //vector<string> test= g.topo_sort(g.begin_dfs("Belgaum"), g.end_dfs("Chennai"));
     #endif
-
+    cout << "num of comp : " << g.get_number_of_components("Mumbai") << endl;
     return 0;
 }
