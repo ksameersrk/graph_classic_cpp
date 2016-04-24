@@ -26,7 +26,10 @@ class Node
         {
             for(int i=0; i<v.size(); i++)
             {
-                neighbours_.insert(make_pair(i, v[i]));
+                if(v[i] > 0)
+                {
+                    neighbours_.insert(make_pair(i, v[i]));
+                }
             }
         }
         
@@ -91,16 +94,23 @@ class Graph
         int source_;
         int destination_;
         vector<Node> graph_;
+        vector<char*> node_names_;
         
     public:
         Graph(const vector<vector<int>>& matrix,
-                int src = 0,int dest = 0) 
+                vector<char*> node_names,
+                int src = 0,
+                int dest = 0) 
         : source_(src), destination_(dest)
         {
             for(int i=0; i<matrix.size(); i++)
             {
                 Node tmp(i, matrix[i]);
                 graph_.push_back(tmp);
+            }
+            for(int i=0; i<node_names.size(); i++)
+            {
+                node_names_.push_back(node_names[i]);
             }
         }
         
@@ -111,19 +121,25 @@ class Graph
 			vector<Node> graph_temp_;	
 			bool* visited;
 			list<int> stack;
-			bool last = false; 
+			bool last = false;
+			vector<char*> node_names_;
 			
 			public:
-			dfs_iterator(Node* sc, vector<Node> graph_temp)
+			dfs_iterator(Node* sc, vector<Node> graph_temp, vector<char*> node_names)
 			:visited(new bool[graph_temp.size()]), pt_(sc), graph_temp_(graph_temp)
 			{
 				for(int i=0; i<graph_temp.size(); i++)
 					visited[i] = false;
+					
+				for(int i=0; i<node_names.size(); i++)
+                {
+                    node_names_.push_back(node_names[i]);
+                }
 			}
-			int operator*()
-			{
-				return pt_->name_;
-			}
+			char* operator *()
+        	{
+        		return node_names_[pt_->name_];
+        	}
 			bool operator==(const dfs_iterator& rhs)
 			{
 				return pt_->name_ == rhs.pt_->name_;
@@ -153,7 +169,6 @@ class Graph
 				vector<int> temp;
 				for(auto k : pt_->neighbours_)
 				{
-					if(k.second > 0)
 						temp.push_back(k.first);
 				}
 		
@@ -181,6 +196,7 @@ class Graph
         	bool *visited;
         	vector<Node> graph_temp_;
         	bool last = false;
+        	vector<char*> node_names_;
 
         	public:
         	//default ctor
@@ -189,13 +205,18 @@ class Graph
         	{}
         	
         	//constructor
-        	bfs_iterator(Node *rhs,vector<Node> g)
+        	bfs_iterator(Node *rhs,vector<Node> g, vector<char*> node_names)
         	:pt_(rhs), graph_temp_(g), visited(new bool[g.size()])
         	{
         	    for(int i=0; i<g.size(); i++)
         	    {
         	        visited[i] = false;
         	    }
+        	    
+        	    for(int i=0; i<node_names.size(); i++)
+                {
+                    node_names_.push_back(node_names[i]);
+                }
         	}
 
 
@@ -204,9 +225,9 @@ class Graph
         	{}
     
         	//dereferencing
-        	int operator *()
+        	char* operator *()
         	{
-        		return pt_->name_;
+        		return node_names_[pt_->name_];
         	}
 
         	bool operator ==(bfs_iterator rhs)
@@ -240,8 +261,7 @@ class Graph
         		for(auto k : pt_->neighbours_)
         		{	
         			if(! visited[k.first] &&
-        			    find(begin(queue), end(queue), k.first) == queue.end() &&
-        			    k.second > 0)
+        			    find(begin(queue), end(queue), k.first) == queue.end())
     				{
     					queue.push_back(k.first);
     				}
@@ -259,25 +279,25 @@ class Graph
 
         bfs_iterator begin_bfs()
         {
-        	return bfs_iterator(&graph_[source_],graph_);
+        	return bfs_iterator(&graph_[source_], graph_, node_names_);
         }
 
         bfs_iterator end_bfs()
         {
-        	return bfs_iterator(&graph_[destination_],graph_);
+        	return bfs_iterator(&graph_[destination_], graph_, node_names_);
         }
 
 		dfs_iterator begin_dfs()
 		{
-			return dfs_iterator(&graph_[source_],graph_);
+			return dfs_iterator(&graph_[source_], graph_, node_names_);
 		}
 		dfs_iterator end_dfs()
 		{
-			return dfs_iterator(&graph_[destination_],graph_);
+			return dfs_iterator(&graph_[destination_], graph_, node_names_);
 		}
 };
 
-vector<vector<int>> input(int N)
+vector<vector<int>> input_matrix(int N)
 {
     vector<vector<int>> v; 
     for(int i=0; i<N; i++)
@@ -290,6 +310,19 @@ vector<vector<int>> input(int N)
             tmp.push_back(value);
         }
         v.push_back(tmp);
+    }
+    return v;
+}
+
+vector<char*> input_string(int N)
+{
+    vector<char*> v;
+    char *ch;
+    for(int i=0; i<N; i++)
+    {
+        ch = new char[100];
+        cin >> ch;
+        v.push_back(ch);
     }
     return v;
 }
@@ -309,8 +342,9 @@ int main()
 {
     int N;
     cin >> N;
-    vector<vector<int>> adjacency_matrix = input(N);
-    Graph g(adjacency_matrix, 0, 1);
+    vector<char*> vertex_names = input_string(N);
+    vector<vector<int>> adjacency_matrix = input_matrix(N);
+    Graph g(adjacency_matrix, vertex_names, 0, 1);
     cout << "BFS : ";
     disp(g.begin_bfs(), g.end_bfs());
     cout << "DFS : ";
