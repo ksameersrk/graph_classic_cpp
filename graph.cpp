@@ -125,6 +125,7 @@ class Graph
         	list<int> queue;
         	vector<int> visited;
         	vector<Node> temp_;
+        	bool last = false;
 
         	public:
         	//default ctor
@@ -134,7 +135,7 @@ class Graph
         	
         	//constructor
         	bfs_iterator(Node *rhs,vector<Node> g)
-        	:pt_(rhs),temp_(g){queue.clear();visited.clear();}
+        	:pt_(rhs),temp_(g){}
 
 
         	//destructor
@@ -154,34 +155,41 @@ class Graph
 
         	bool operator !=(bfs_iterator rhs)
         	{
-        		return !(pt_ == rhs.pt_);
+        		if(last)
+        		{
+        		    return false;
+        		}
+        		else
+        		{
+        		    if(*this == rhs)
+        		    {
+        		        last = true;
+        		    }
+        		    return true;
+        		}
         	}
 
         	bfs_iterator& operator ++()
         	{
-        		cout << "Visited size : " << visited.size() << endl;
+        	    
         		if(find(begin(visited),end(visited),pt_->name_) == visited.end())
         		{
         			visited.push_back(pt_->name_);
-        			cout<<"NAME = "<<pt_->name_<<"\n";
         		}
-
         		for(auto k : pt_->neighbours_)
         		{	
-        			if(find(begin(visited),end(visited),k.first) == visited.end() && k.second > 0)
+        			if(find(begin(visited), end(visited), k.first) == visited.end() &&
+        			    find(begin(queue), end(queue), k.first) == queue.end() &&
+        			    k.second > 0)
     				{
     					queue.push_back(k.first);
     				}
     			}
-
-        		pt_ = &temp_[queue.front()];
-        		queue.pop_front();
-
-        		cout<<"Queue:\t";
-        		for(int l : queue)
-        			cout<<l<<"\t";
-        		cout << endl;
-
+    			if(!queue.empty())
+    			{
+            		pt_ = &temp_[queue.front()];
+            		queue.pop_front();
+                }
         		return *this;
 
         	}
@@ -195,6 +203,7 @@ class Graph
 
         bfs_iterator end_g()
         {
+            //cout << destination_ << endl;
         	return bfs_iterator(&graph_[destination_],graph_);
         }
 
