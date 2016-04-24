@@ -2,6 +2,7 @@
 #include <vector>
 #include <map>
 #include <algorithm>
+#include <list>
 //#include <cstring>
 using namespace std;
 
@@ -11,11 +12,12 @@ class Node
         int name_;
         map<int, int> neighbours_;
         friend class Graph;
+        friend class bfs_iterator;
         
     public:
     	//default constructor
     	Node()
-    	:name_(-1)
+    	:name_()
     	{}
 
     	//parametrized constructor
@@ -86,9 +88,10 @@ class Node
 class Graph
 {
     private:
-        vector<Node> graph_;
         int source_;
         int destination_;
+        vector<Node> graph_;
+
     public:
         Graph(const vector<vector<int>>& matrix,
                 int src = 0,int dest = 0) 
@@ -119,11 +122,25 @@ class Graph
         {
         	private:
         	Node *pt_;
+        	list<int> queue;
+        	vector<int> visited;
+        	vector<Node> temp_;
 
+        	public:
+        	//default ctor
+        	bfs_iterator()
+        	//: to do
+        	{}
+        	
         	//constructor
-        	bfs_iterator(Node *rhs)
-        	:pt_(rhs){}
+        	bfs_iterator(Node *rhs,vector<Node> g)
+        	:pt_(rhs),temp_(g){queue.clear();visited.clear();}
 
+
+        	//destructor
+        	~bfs_iterator()
+        	{}
+    
         	//dereferencing
         	int operator *()
         	{
@@ -132,7 +149,7 @@ class Graph
 
         	bool operator ==(bfs_iterator rhs)
         	{
-        		return pt_ == rhs.pt_;
+        		return pt_->name_ == rhs.pt_->name_;
         	}
 
         	bool operator !=(bfs_iterator rhs)
@@ -140,12 +157,46 @@ class Graph
         		return !(pt_ == rhs.pt_);
         	}
 
-        	Node operator ++()
+        	bfs_iterator& operator ++()
         	{
-        		//to be done
+        		cout << "Visited size : " << visited.size() << endl;
+        		if(find(begin(visited),end(visited),pt_->name_) == visited.end())
+        		{
+        			visited.push_back(pt_->name_);
+        			cout<<"NAME = "<<pt_->name_<<"\n";
+        		}
+
+        		for(auto k : pt_->neighbours_)
+        		{	
+        			if(find(begin(visited),end(visited),k.first) == visited.end() && k.second > 0)
+    				{
+    					queue.push_back(k.first);
+    				}
+    			}
+
+        		pt_ = &temp_[queue.front()];
+        		queue.pop_front();
+
+        		cout<<"Queue:\t";
+        		for(int l : queue)
+        			cout<<l<<"\t";
+        		cout << endl;
+
+        		return *this;
+
         	}
 
         };
+
+        bfs_iterator begin_g()
+        {
+        	return bfs_iterator(&graph_[source_],graph_);
+        }
+
+        bfs_iterator end_g()
+        {
+        	return bfs_iterator(&graph_[destination_],graph_);
+        }
 
 };
 
@@ -172,7 +223,16 @@ int main()
     cin >> N;
     //names mapping
     vector<vector<int>> adjacency_matrix = input(N);
-    Graph g(adjacency_matrix);
-    g.display();
+    Graph g(adjacency_matrix,0,1);
+    //g.display();
+
+    auto it = g.begin_g();
+    auto end = g.end_g();
+    while(it != end)
+    {
+    	cout << *it << endl;
+    	++it;
+    }
+
     return 0;
 }
