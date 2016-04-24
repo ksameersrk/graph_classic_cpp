@@ -253,6 +253,13 @@ class Graph
 				}
 				return *this;
 			}	
+
+            dfs_iterator operator++(int) // post
+            {                
+                dfs_iterator temp (*this);
+                ++*this;
+                return temp;
+            }
 			
 		};
         
