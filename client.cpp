@@ -59,9 +59,33 @@ int main()
     vector<string> vertex_names = input_string(N);
     vector<vector<int>> adjacency_matrix = input_matrix(N);
     Graph g(adjacency_matrix, vertex_names);
+    #if 0
     cout << "BFS : ";
-    disp(g.begin_bfs("Mumbai"), g.end_bfs("Delhi"));
+    disp(g.begin_bfs("Mumbai"), g.end_bfs("Belgaum"));
     cout << "DFS : ";
-    disp(g.begin_dfs("Mumbai"), g.end_dfs("Delhi"));
+    disp(g.begin_dfs("Mumbai"), g.end_dfs("Belgaum"));
+    #endif
+    
+    #if 0
+    cout << "BFS : ";
+    disp(g.begin_bfs("Belgaum"), g.end_bfs("Mumbai"));
+    cout << "DFS : ";
+    disp(g.begin_dfs("Belgaum"), g.end_dfs("Mumbai"));
+    #endif
+    
+    #if 0
+    cout << "BFS : ";
+    disp(g.begin_bfs("Belgaum"), g.end_bfs("Chennai"));
+    //cout << "DFS : ";
+    //disp(g.begin_dfs("Belgaum"), g.end_dfs("Mumbai"));
+    #endif
+    
+    #if 1
+    cout << "BFS : ";
+    disp(g.begin_bfs("Belgaum"), g.end_bfs("Chennai"));
+    cout << "DFS : ";
+    disp(g.begin_dfs("Belgaum"), g.end_dfs("Chennai"));
+    #endif
+    
     return 0;
 }
