@@ -13,6 +13,12 @@ class Node
         friend class Graph;
         
     public:
+    	//default constructor
+    	Node()
+    	:name_(-1)
+    	{}
+
+    	//parametrized constructor
         Node(int name, const vector<int>& v)
         : name_(name)
         {
@@ -22,6 +28,7 @@ class Node
             }
         }
         
+        //destructor
         ~Node()
         {
         }
@@ -61,6 +68,7 @@ class Node
             //rhs.neighbours_ = NULL;
         }
         
+        //move assignment
         Node& operator=(Node&& rhs)
         {
             if(this != &rhs)
@@ -81,11 +89,10 @@ class Graph
         vector<Node> graph_;
         int source_;
         int destination_;
-
     public:
         Graph(const vector<vector<int>>& matrix,
-                int source=0, int destination=0) 
-        : source_(source), destination_(destination)
+                int src = 0,int dest = 0) 
+        : source_(src), destination_(dest)
         {
             for(int i=0; i<matrix.size(); i++)
             {
@@ -106,6 +113,39 @@ class Graph
                 cout << "\n";
             }
         }
+
+        //bfs iterator
+        class bfs_iterator
+        {
+        	private:
+        	Node *pt_;
+
+        	//constructor
+        	bfs_iterator(Node *rhs)
+        	:pt_(rhs){}
+
+        	//dereferencing
+        	int operator *()
+        	{
+        		return pt_->name_;
+        	}
+
+        	bool operator ==(bfs_iterator rhs)
+        	{
+        		return pt_ == rhs.pt_;
+        	}
+
+        	bool operator !=(bfs_iterator rhs)
+        	{
+        		return !(pt_ == rhs.pt_);
+        	}
+
+        	Node operator ++()
+        	{
+        		//to be done
+        	}
+
+        };
 
 };
 
@@ -130,6 +170,7 @@ int main()
 {
     int N;
     cin >> N;
+    //names mapping
     vector<vector<int>> adjacency_matrix = input(N);
     Graph g(adjacency_matrix);
     g.display();
