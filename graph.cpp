@@ -15,12 +15,12 @@ class Node
         friend class bfs_iterator;
         
     public:
-    	//default constructor
-    	Node()
-    	:name_()
-    	{}
+        //default constructor
+        Node()
+        :name_()
+        {}
 
-    	//parametrized constructor
+        //parametrized constructor
         Node(int name, const vector<int>& v)
         : name_(name)
         {
@@ -54,13 +54,11 @@ class Node
             if(this != &rhs)
             {
                 name_ = rhs.name_;
-                map<int, int> m;
                 neighbours_.clear();
                 for(auto k : rhs.neighbours_)
                 {
-                    m.insert(k);
+                    neighbours_.insert(k);
                 }
-                neighbours_ = move(m);
             }
             return *this;
         }
@@ -97,6 +95,11 @@ class Graph
         vector<char*> node_names_;
         
     public:
+        //default ctor
+        Graph()
+        {}
+
+        //constructor
         Graph(const vector<vector<int>>& matrix,
                 vector<char*> node_names,
                 int src = 0,
@@ -113,6 +116,72 @@ class Graph
                 node_names_.push_back(node_names[i]);
             }
         }
+
+        //destructor
+        ~Graph()
+        { }
+        
+        //copy constructor
+        Graph(const Graph& rhs)
+        {
+            source_ = rhs.source_;
+            destination_ = rhs.destination_;
+            for(auto k : rhs.graph_)
+            {
+                graph_.push_back(k);
+            }
+            for(auto k : rhs.node_names_)
+            {
+                node_names_.push_back(k);
+            }
+        }
+        
+        //copy assignment
+        Graph& operator=(const Graph& rhs)
+        {
+            if(this != &rhs)
+            {
+                source_ = rhs.source_;
+                destination_ = rhs.destination_;
+                graph_.clear();
+                node_names_.clear();
+                for(auto k : rhs.graph_)
+                {
+                    graph_.push_back(k);
+                }
+                for(auto k : rhs.node_names_)
+                {
+                    node_names_.push_back(k);
+                }
+            }
+            return *this;
+        }
+        
+        //move constructor
+        Graph(Graph&& rhs)
+        : source_(rhs.source_),destination_(rhs.destination_)
+        {
+            rhs.source_ = -1;
+            rhs.destination_ = -1;
+            graph_ = move(rhs.graph_);
+            node_names_ = move(rhs.node_names_);
+        }
+        
+        //move assignment
+        Graph& operator=(Graph&& rhs)
+        {
+            if(this != &rhs)
+            {
+                source_ = rhs.source_;
+                destination_ = rhs.destination_;
+                graph_ = move(rhs.graph_);
+                node_names_ = move(rhs.node_names_);
+                rhs.source_ = -1;
+                rhs.destination_ = -1;
+            }
+            return *this;
+        }
+        
         
 		class dfs_iterator
 		{
@@ -186,6 +255,7 @@ class Graph
 			}	
 			
 		};
+        
 
         //bfs iterator
         class bfs_iterator
@@ -220,9 +290,9 @@ class Graph
         	}
 
 
-        	//destructor
-        	~bfs_iterator()
-        	{}
+            //destructor
+            ~bfs_iterator()
+            {}
     
         	//dereferencing
         	char* operator *()
@@ -230,26 +300,26 @@ class Graph
         		return node_names_[pt_->name_];
         	}
 
-        	bool operator ==(bfs_iterator rhs)
-        	{
-        		return pt_->name_ == rhs.pt_->name_;
-        	}
+            bool operator ==(bfs_iterator rhs)
+            {
+                return pt_->name_ == rhs.pt_->name_;
+            }
 
-        	bool operator !=(bfs_iterator rhs)
-        	{
-        		if(last)
-        		{
-        		    return false;
-        		}
-        		else
-        		{
-        		    if(*this == rhs)
-        		    {
-        		        last = true;
-        		    }
-        		    return true;
-        		}
-        	}
+            bool operator !=(bfs_iterator rhs)
+            {
+                if(last)
+                {
+                    return false;
+                }
+                else
+                {
+                    if(*this == rhs)
+                    {
+                        last = true;
+                    }
+                    return true;
+                }
+            }
 
         	bfs_iterator& operator ++()
         	{
@@ -266,14 +336,14 @@ class Graph
     					queue.push_back(k.first);
     				}
     			}
-    			if(!queue.empty())
-    			{
-            		pt_ = &graph_temp_[queue.front()];
-            		queue.pop_front();
+                if(!queue.empty())
+                {
+                    pt_ = &graph_temp_[queue.front()];
+                    queue.pop_front();
                 }
-        		return *this;
+                return *this;
 
-        	}
+            }
 
         };
 
@@ -349,5 +419,10 @@ int main()
     disp(g.begin_bfs(), g.end_bfs());
     cout << "DFS : ";
     disp(g.begin_dfs(), g.end_dfs());
+    Graph h(g);
+    cout << "BFS : ";
+    disp(h.begin_bfs(), h.end_bfs());
+    cout << "DFS : ";
+    disp(h.begin_dfs(), h.end_dfs());
     return 0;
 }
