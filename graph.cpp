@@ -3,6 +3,8 @@
 #include <map>
 #include <algorithm>
 #include <list>
+#define BFS 0
+#define DFS 1
 
 using namespace std;
 
@@ -183,136 +185,40 @@ class Graph
         }
         
         
-		class dfs_iterator
-		{
-			private:
-			Node* pt_;
-			vector<Node> graph_temp_;	
-			bool* visited;
-			list<int> stack;
-			bool last = false;
-			vector<char*> node_names_;
-			
-			public:
-			dfs_iterator(Node* sc, vector<Node> graph_temp, vector<char*> node_names)
-			:visited(new bool[graph_temp.size()]), pt_(sc), graph_temp_(graph_temp)
-			{
-				for(int i=0; i<graph_temp.size(); i++)
-					visited[i] = false;
-					
-				for(int i=0; i<node_names.size(); i++)
-                {
-                    node_names_.push_back(node_names[i]);
-                }
-			}
-			char* operator *()
-        	{
-        		return node_names_[pt_->name_];
-        	}
-			bool operator==(const dfs_iterator& rhs)
-			{
-				return pt_->name_ == rhs.pt_->name_;
-			}
-			bool operator!=(const dfs_iterator& rhs)
-			{
-				if(last)
-        		{
-        		    return false;
-        		}
-        		else
-        		{
-        		    if(*this == rhs)
-        		    {
-        		        last = true;
-        		    }
-        		    return true;
-        		}
-			}
-
-			dfs_iterator& operator++() // pre
-			{
-				if(! visited[pt_->name_])
-			    {
-			        visited[pt_->name_] = true;
-			    }
-				vector<int> temp;
-				for(auto k : pt_->neighbours_)
-				{
-						temp.push_back(k.first);
-				}
-		
-				for(int i : temp) 
-				{
-					if(! visited[i])
-						stack.push_back(i);
-				}
-				if(! stack.empty())
-				{
-				    pt_ = &graph_temp_[stack.back()];
-				    stack.pop_back();
-				}
-				return *this;
-			}	
-
-            dfs_iterator operator++(int) // post
-            {                
-                dfs_iterator temp (*this);
-                ++*this;
-                return temp;
-            }
-			
-		};
-        
-
-        //bfs iterator
-        class bfs_iterator
+        class iterator
         {
-        	private:
-        	Node *pt_;
-        	list<int> queue;
-        	bool *visited;
-        	vector<Node> graph_temp_;
-        	bool last = false;
-        	vector<char*> node_names_;
-
-        	public:
-        	//default ctor
-        	bfs_iterator()
-        	//: to do
-        	{}
-        	
-        	//constructor
-        	bfs_iterator(Node *rhs,vector<Node> g, vector<char*> node_names)
-        	:pt_(rhs), graph_temp_(g), visited(new bool[g.size()])
-        	{
-        	    for(int i=0; i<g.size(); i++)
-        	    {
-        	        visited[i] = false;
-        	    }
-        	    
-        	    for(int i=0; i<node_names.size(); i++)
+            private:
+            Node* pt_;
+            vector<Node> graph_temp_;   
+            bool* visited;
+            list<int> cont;
+            bool last = false;
+            vector<char*> node_names_;
+            int check;
+    
+            public:
+            iterator(Node* sc, vector<Node> graph_temp, vector<char*> node_names,int c)
+            :visited(new bool[graph_temp.size()]), pt_(sc), graph_temp_(graph_temp),check(c)
+            {
+                for(int i=0; i<graph_temp.size(); i++)
+                {
+                    visited[i] = false;
+                }
+                    
+                for(int i=0; i<node_names.size(); i++)
                 {
                     node_names_.push_back(node_names[i]);
                 }
-        	}
-
-
-            //destructor
-            ~bfs_iterator()
-            {}
-    
-        	//dereferencing
-        	char* operator *()
-        	{
-        		return node_names_[pt_->name_];
-        	}
-
-            bool operator ==(bfs_iterator rhs)
+            }
+            char* operator *()
+            {
+                return node_names_[pt_->name_];
+            }
+            bool operator==(const iterator& rhs)
             {
                 return pt_->name_ == rhs.pt_->name_;
             }
-
-            bool operator !=(bfs_iterator rhs)
+            bool operator!=(const iterator& rhs)
             {
                 if(last)
                 {
@@ -328,58 +234,59 @@ class Graph
                 }
             }
 
-        	bfs_iterator& operator ++()
-        	{
-        	    
-        		if(! visited[pt_->name_])
-        		{
-        			visited[pt_->name_] = true;
-        		}
-        		for(auto k : pt_->neighbours_)
-        		{	
-        			if(! visited[k.first] &&
-        			    find(begin(queue), end(queue), k.first) == queue.end())
-    				{
-    					queue.push_back(k.first);
-    				}
-    			}
-                if(!queue.empty())
+            iterator& operator++() // pre
+            {
+                if(! visited[pt_->name_])
                 {
-                    pt_ = &graph_temp_[queue.front()];
-                    queue.pop_front();
+                    visited[pt_->name_] = true;
+                }
+
+                vector<int> temp;
+                for(auto k : pt_->neighbours_)
+                {
+                        temp.push_back(k.first);
+                }
+        
+                for(int i : temp) 
+                {
+                    if(! visited[i])
+                        cont.push_back(i);
+                }
+                if(! cont.empty())
+                {
+                    if(check == 1)
+                    {
+                        pt_ = &graph_temp_[cont.back()];
+                        cont.pop_back();
+                    }
+
+                    else
+                    {
+                        pt_ = &graph_temp_[cont.front()];
+                        cont.pop_front();
+                    }
                 }
                 return *this;
+            }   
 
+            iterator operator++(int) // post
+            {                
+                iterator temp (*this);
+                ++*this;
+                return temp;
             }
             
-            bfs_iterator operator ++(int)
-        	{
-        	    bfs_iterator temp(*this);
-        		++*this;
-                return temp;
-
-            }
-
         };
+        
 
-        bfs_iterator begin_bfs()
+        iterator begin(int c)
         {
-        	return bfs_iterator(&graph_[source_], graph_, node_names_);
+            return iterator(&graph_[source_], graph_, node_names_, c);
         }
-
-        bfs_iterator end_bfs()
+        iterator end(int c)
         {
-        	return bfs_iterator(&graph_[destination_], graph_, node_names_);
+            return iterator(&graph_[destination_], graph_, node_names_, c);
         }
-
-		dfs_iterator begin_dfs()
-		{
-			return dfs_iterator(&graph_[source_], graph_, node_names_);
-		}
-		dfs_iterator end_dfs()
-		{
-			return dfs_iterator(&graph_[destination_], graph_, node_names_);
-		}
 };
 
 vector<vector<int>> input_matrix(int N)
@@ -442,14 +349,8 @@ int main()
     vector<vector<int>> adjacency_matrix = input_matrix(N);
     Graph g(adjacency_matrix, vertex_names, 0, 1);
     cout << "BFS : ";
-    disp2(g.begin_bfs(), g.end_bfs());
-    /*cout << "DFS : ";
-    disp(g.begin_dfs(), g.end_dfs());
-    Graph h(g);
-    cout << "BFS : ";
-    disp(h.begin_bfs(), h.end_bfs());
+    disp(g.begin(BFS), g.end(BFS));
     cout << "DFS : ";
-    disp(h.begin_dfs(), h.end_dfs());
-    */
+    disp(g.begin(DFS), g.end(DFS));
     return 0;
 }
