@@ -1,6 +1,4 @@
 *.o
 *.out
-*.cpp~
-*.gitignore~
-*.h~
-*.txt~
+*.*~
+*Makefile~
