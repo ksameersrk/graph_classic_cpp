@@ -85,7 +85,6 @@ int main()
     vector<string> test= g.topo_sort(g.begin_dfs("Belgaum"), g.end_dfs("Chennai"));
     disp(test.begin(), test.end());
     
-    //cout << "Number of components in graphs : " << g.get_number_of_components("Mumbai") << endl << endl;
     
     cout << "Compare graph : (g('Belgaum') == i('Belgaum') -> " << comp_graphs(g.begin_dfs("Belgaum"), 
                                                           g.end_dfs(),
