@@ -68,5 +68,9 @@ int main()
     //vector<string> test= g.topo_sort(g.begin_dfs("Belgaum"), g.end_dfs("Chennai"));
     #endif
 
+
+    //cout << "num of comp : " << g.get_number_of_components("Mumbai") << endl;
+	//djikstra(0,adjacency_matrix,g,N);
+	g.djikstra("Mumbai",N);
     return 0;
 }

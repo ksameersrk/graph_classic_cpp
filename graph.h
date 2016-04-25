@@ -56,6 +56,8 @@ class Graph
         iterator end_dfs(string str="$$$");
         iterator make_itr(int c, string str);
 
+		void djikstra(string src_, int N);
+
         vector<string> topo_sort(iterator start_pt,iterator end_pt);
 
 
