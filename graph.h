@@ -56,7 +56,10 @@ class Graph
         iterator end_dfs(string str="$$$");
         iterator make_itr(int c, string str);
 
+		void djikstra(string src_, int N);
+
         vector<string> topo_sort(iterator start_pt,iterator end_pt);
 
 };
 Graph::iterator myfind(Graph::iterator first, Graph::iterator last, string val);
+//void djikstra(int source, const vector<vector<int>>& adjacency_matrix, const Graph& g_, int N);

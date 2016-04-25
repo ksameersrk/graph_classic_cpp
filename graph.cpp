@@ -1,4 +1,6 @@
 #include "graph.h"
+#define MAX_VAL 999
+#include <typeinfo>
 
 //default ctor
 Graph::Graph()
@@ -221,3 +223,46 @@ int Graph::get_number_of_components(string city)
     }
     return it.counter_;
 }
+
+void Graph::djikstra(string src, int N)
+{
+	int src_ = name_index_[src];
+	int distances[N];
+	bool shortest_path_set[N];
+	for(int i=0; i<N; i++)
+	{
+		distances[i] = MAX_VAL;
+		shortest_path_set[i] = false;		
+	}
+	distances[src_] = 0;
+	int min_v;
+	for(int i=0; i<N; i++)
+	{
+		int min = MAX_VAL;
+		min_v = -1;
+		for(int i=0; i<N; i++)
+		{
+			if(distances[i] < min && shortest_path_set[i] == false)
+			{
+				min_v = i;
+				min = distances[i];
+			}
+		}	
+		shortest_path_set[min_v] = true;
+		//update dists of all nbrs of min_v
+				for(auto k : graph_[min_v].neighbours_)
+		{
+			if(shortest_path_set[k.first]==false && distances[min_v]!=MAX_VAL 
+				&& distances[k.first] > distances[min_v]+k.second)
+			{
+				distances[k.first] = distances[min_v]+k.second;
+			}
+		}
+	}
+	for(int i=0; i<N; i++)
+	{
+		cout << node_names_[src_] << " To " << node_names_[i] << " --> " << distances[i] << "\n";
+	}
+	cout << "\n";	
+}
+
