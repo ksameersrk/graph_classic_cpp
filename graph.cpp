@@ -38,6 +38,10 @@ Graph::Graph(const Graph& rhs)
     {
         node_names_.push_back(k);
     }
+    for(auto k : rhs.name_index_)
+    {
+    	name_index_.insert(k);
+    }
 }
 
 //copy assignment
@@ -47,6 +51,7 @@ Graph& Graph::operator=(const Graph& rhs)
     {
         graph_.clear();
         node_names_.clear();
+        name_index_.clear();
         for(auto k : rhs.graph_)
         {
             graph_.push_back(k);
@@ -55,6 +60,10 @@ Graph& Graph::operator=(const Graph& rhs)
         {
             node_names_.push_back(k);
         }
+        for(auto k : rhs.name_index_)
+    	{
+    		name_index_.insert(k);
+    	}
     }
     return *this;
 }
@@ -64,6 +73,7 @@ Graph::Graph(Graph&& rhs)
 {
     graph_ = move(rhs.graph_);
     node_names_ = move(rhs.node_names_);
+    name_index_ = move(rhs.name_index_);
 }
 
 //move assignment
@@ -73,6 +83,7 @@ Graph& Graph::operator=(Graph&& rhs)
     {
         graph_ = move(rhs.graph_);
         node_names_ = move(rhs.node_names_);
+        name_index_ = move(rhs.name_index_);
     }
     return *this;
 }
@@ -220,4 +231,20 @@ int Graph::get_number_of_components(string city)
         int x;
     }
     return it.counter_;
+}
+
+bool comp_graphs(Graph::iterator st1,Graph::iterator en1,Graph::iterator st2,Graph::iterator en2)
+{
+	while(st1 != en1 && st2 != en2)
+	{
+		if(st1 != st2)
+			break;
+		++st1;
+		++st2;
+	}
+
+	if(st1 == en1 and st2 == en2)
+		return true;
+	else
+		return false;
 }
