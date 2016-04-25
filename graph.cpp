@@ -104,6 +104,12 @@ Graph::iterator::iterator(Node* sc, vector<Node> graph_temp, vector<string> node
         node_names_.push_back(node_names[i]);
     }
 }
+
+Graph::iterator::~iterator()
+{
+    delete [] visited;
+}
+
 string Graph::iterator::operator *()
 {
     return node_names_[pt_->name_];
@@ -144,7 +150,6 @@ Graph::iterator& Graph::iterator::operator++() // pre
             cont.pop_front();
         }
     }
-    
     else
     {
         counter_++;
@@ -228,11 +233,15 @@ Graph::iterator myfind(Graph::iterator first, Graph::iterator last, string val)
 int Graph::get_number_of_components(string city)
 {	
     auto it = begin_bfs(city);
+    int num = 0;
+    cout << "num : " << it.counter_ << endl;
+    cout << (it == end_bfs()) << endl;
     for(; it != end_bfs(); it++)
     {
-        int x;
+        num = it.counter_;
+        cout << "num : " << it.counter_ << endl;
     }
-    return it.counter_;
+    return num;
 }
 
 

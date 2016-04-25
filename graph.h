@@ -42,6 +42,7 @@ class Graph
             public:
             int counter_=0;
             iterator(Node* sc, vector<Node> graph_temp, vector<string> node_names,int c);
+            ~iterator();
             string operator *();
             bool operator==(const iterator& rhs);
             bool operator!=(const iterator& rhs);

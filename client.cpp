@@ -38,7 +38,7 @@ void disp(ptr first, ptr last)
         cout << *first << "   ";
         ++first;
     }
-    cout << endl;
+    cout << endl << endl;
 }
 
 template<typename ptr>
@@ -49,7 +49,7 @@ void disp2(ptr first, ptr last)
         cout << *first << "   ";
         first++;
     }
-    cout << endl;
+    cout << endl << endl;
 }
 
 int main()
@@ -58,19 +58,52 @@ int main()
     cin >> N;
     vector<string> vertex_names = input_string(N);
     vector<vector<int>> adjacency_matrix = input_matrix(N);
+    
     Graph g(adjacency_matrix, vertex_names);
+    cout << "Created graph object g" << endl;
+    
+    Graph h(g);
+    cout << "Copy constructor h<-g" << endl;
+    
+    Graph i(move(h));
+    cout << "Move constructor i<-h" << endl;
+    
+    Graph j = i;
+    cout << "Copy Assignment j<-i" << endl;
+    
+    Graph k = move(j);
+    cout << "Move assignment k<-j" << endl << endl;
 
-    #if 0
-    /*cout << "BFS : ";
-    disp(g.begin_bfs("Belgaum"), g.end_bfs("Chennai"));*/
-    cout << "DFS : ";
-    disp(g.begin_dfs("Belgaum"), g.end_dfs());
-    //vector<string> test= g.topo_sort(g.begin_dfs("Belgaum"), g.end_dfs("Chennai"));
-    #endif
+    
+    cout << "BFS : Belgaum -> Chennai : ";
+    disp(g.begin_bfs("Belgaum"), g.end_bfs("Chennai"));
+    
+    cout << "DFS : Chennai -> *No destination : ";
+    disp(g.begin_dfs("Chennai"), g.end_dfs());
+    
+    cout << "Topo sort : Belgaum -> Chennai : ";   
+    vector<string> test= g.topo_sort(g.begin_dfs("Belgaum"), g.end_dfs("Chennai"));
+    disp(test.begin(), test.end());
+    
+    //cout << "Number of components in graphs : " << g.get_number_of_components("Mumbai") << endl << endl;
+    
+    cout << "Compare graph : (g('Belgaum') == i('Belgaum') -> " << comp_graphs(g.begin_dfs("Belgaum"), 
+                                                          g.end_dfs(),
+                                                          g.begin_dfs("Belgaum"),
+                                                          g.end_dfs()
+                                                         ) << endl ;
 
-
-    //cout << "num of comp : " << g.get_number_of_components("Mumbai") << endl;
-	//djikstra(0,adjacency_matrix,g,N);
-	g.djikstra("Mumbai",N);
+    cout << "Compare graph : (g('Belgaum') == i('Bangalore') -> " << comp_graphs(g.begin_dfs("Belgaum"), 
+                                                          g.end_dfs(),
+                                                          g.begin_dfs("Bangalore"),
+                                                          g.end_dfs()
+                                                         ) << endl << endl ;
+   
+    cout << "Dijkstra matrix " << endl;
+    cin >> N;
+    vertex_names = input_string(N);
+    adjacency_matrix = input_matrix(N);
+    Graph obj(adjacency_matrix, vertex_names);
+	obj.djikstra("Mumbai",N);
     return 0;
 }
