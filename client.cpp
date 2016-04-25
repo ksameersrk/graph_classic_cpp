@@ -52,6 +52,49 @@ void disp2(ptr first, ptr last)
     cout << endl << endl;
 }
 
+void djikstra(string src, Graph g)
+{
+    int N = g.get_size();
+	int src_ = g.get_index(src);
+	int distances[N];
+	bool shortest_path_set[N];
+	for(int i=0; i<N; i++)
+	{
+		distances[i] = 999;
+		shortest_path_set[i] = false;		
+	}
+	distances[src_] = 0;
+	int min_v;
+	for(int i=0; i<N; i++)
+	{
+		int min = 999;
+		min_v = -1;
+		for(int i=0; i<N; i++)
+		{
+			if(distances[i] < min && shortest_path_set[i] == false)
+			{
+				min_v = i;
+				min = distances[i];
+			}
+		}	
+		shortest_path_set[min_v] = true;
+		//update dists of all nbrs of min_v
+		for(auto k : g.get_neighbours(min_v))
+		{
+			if(shortest_path_set[k.first]==false && distances[min_v]!=999 
+				&& distances[k.first] > distances[min_v]+k.second)
+			{
+				distances[k.first] = distances[min_v]+k.second;
+			}
+		}
+	}
+	for(int i=0; i<N; i++)
+	{
+		cout << g.get_value(src_) << " To " << g.get_value(i) << " --> " << distances[i] << "\n";
+	}
+	cout << "\n";	
+}
+
 int main()
 {
     int N;
@@ -85,6 +128,7 @@ int main()
     vector<string> test= g.topo_sort(g.begin_dfs("Belgaum"), g.end_dfs("Chennai"));
     disp(test.begin(), test.end());
     
+    cout << "Number of components : " << g.get_number_of_components("Mumbai") << endl << endl; 
     
     cout << "Compare graph : (g('Belgaum') == i('Belgaum') -> " << comp_graphs(g.begin_dfs("Belgaum"), 
                                                           g.end_dfs(),
@@ -103,6 +147,6 @@ int main()
     vertex_names = input_string(N);
     adjacency_matrix = input_matrix(N);
     Graph obj(adjacency_matrix, vertex_names);
-	obj.djikstra("Mumbai",N);
+	djikstra("Mumbai", obj);
     return 0;
 }

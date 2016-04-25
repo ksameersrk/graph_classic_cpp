@@ -26,6 +26,12 @@ class Graph
         Graph& operator=(Graph&& rhs);
         
         int get_number_of_components(string city);
+        
+        //added now
+        int get_size();
+        string get_value(int index);
+        int get_index(string str);
+        map<int, int> get_neighbours(int index);
                
         class iterator
         {
@@ -49,6 +55,7 @@ class Graph
             iterator& operator++(); // pre
             iterator operator++(int); // post
             
+            
         };
         
         iterator begin_bfs(string str);
@@ -57,7 +64,7 @@ class Graph
         iterator end_dfs(string str="$$$");
         iterator make_itr(int c, string str);
 
-		void djikstra(string src_, int N);
+		//void djikstra(string src_, int N);
 
         vector<string> topo_sort(iterator start_pt,iterator end_pt);
 

@@ -234,14 +234,12 @@ int Graph::get_number_of_components(string city)
 {	
     auto it = begin_bfs(city);
     int num = 0;
-    cout << "num : " << it.counter_ << endl;
-    cout << (it == end_bfs()) << endl;
-    for(; it != end_bfs(); it++)
+    while(it != end_bfs())
     {
         num = it.counter_;
-        cout << "num : " << it.counter_ << endl;
+        ++it;
     }
-    return num;
+    return num + 1;
 }
 
 
@@ -262,7 +260,7 @@ bool comp_graphs(Graph::iterator st1,Graph::iterator en1,Graph::iterator st2,Gra
 }
 
 
-void Graph::djikstra(string src, int N)
+/*void Graph::djikstra(string src, int N)
 {
 	int src_ = name_index_[src];
 	int distances[N];
@@ -302,4 +300,26 @@ void Graph::djikstra(string src, int N)
 		cout << node_names_[src_] << " To " << node_names_[i] << " --> " << distances[i] << "\n";
 	}
 	cout << "\n";	
+}*/
+
+
+//added now
+int Graph::get_size()
+{
+    return graph_.size() - 1;
+}
+
+string Graph::get_value(int index)
+{
+    return node_names_[index];
+}
+
+int Graph::get_index(string str)
+{
+    return name_index_[str];
+}
+
+map<int, int> Graph::get_neighbours(int index)
+{
+    return graph_[index].neighbours_;
 }
