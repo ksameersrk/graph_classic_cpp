@@ -58,5 +58,7 @@ class Graph
 
         vector<string> topo_sort(iterator start_pt,iterator end_pt);
 
+
 };
 Graph::iterator myfind(Graph::iterator first, Graph::iterator last, string val);
+bool comp_graphs(Graph::iterator st1,Graph::iterator en1,Graph::iterator st2,Graph::iterator en2);
