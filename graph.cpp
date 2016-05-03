@@ -91,7 +91,7 @@ Graph& Graph::operator=(Graph&& rhs)
 }
 
 
-Graph::iterator::iterator(Node* sc, vector<Node> graph_temp, vector<string> node_names,int c)
+Graph::my_iterator::my_iterator(Node* sc, vector<Node> graph_temp, vector<string> node_names,int c)
 :visited(new bool[graph_temp.size()]), pt_(sc), graph_temp_(graph_temp),check(c)
 {
     for(int i=0; i<graph_temp.size(); i++)
@@ -105,25 +105,29 @@ Graph::iterator::iterator(Node* sc, vector<Node> graph_temp, vector<string> node
     }
 }
 
-Graph::iterator::~iterator()
+Graph::my_iterator::~my_iterator()
 {
     delete [] visited;
 }
 
-string Graph::iterator::operator *()
+string Graph::my_iterator::operator *()
 {
     return node_names_[pt_->name_];
 }
-bool Graph::iterator::operator==(const iterator& rhs)
+string Graph::my_iterator::operator->()
+{
+    return node_names_[pt_->name_];
+}
+bool Graph::my_iterator::operator==(const my_iterator& rhs)
 {
     return pt_->name_ == rhs.pt_->name_;
 }
-bool Graph::iterator::operator!=(const iterator& rhs)
+bool Graph::my_iterator::operator!=(const my_iterator& rhs)
 {
 	return ! (*this == rhs);
 }
 
-Graph::iterator& Graph::iterator::operator++() // pre
+Graph::my_iterator& Graph::my_iterator::operator++() // pre
 {
     if(! visited[pt_->name_])
     {
@@ -166,43 +170,43 @@ Graph::iterator& Graph::iterator::operator++() // pre
     return *this;
 }   
 
-Graph::iterator Graph::iterator::operator++(int) // post
+Graph::my_iterator Graph::my_iterator::operator++(int) // post
 {                
-    iterator temp (*this);
+    my_iterator temp (*this);
     ++*this;
     return temp;
 }
     
-Graph::iterator Graph::begin_bfs(string str)
+Graph::my_iterator Graph::begin_bfs(string str)
 {
     return make_itr(BFS, str);
 }
-Graph::iterator Graph::end_bfs(string str)
+Graph::my_iterator Graph::end_bfs(string str)
 {
     return make_itr(BFS, str);
 }
-Graph::iterator Graph::begin_dfs(string str)
+Graph::my_iterator Graph::begin_dfs(string str)
 {
     return make_itr(DFS, str);
 }
-Graph::iterator Graph::end_dfs(string str)
+Graph::my_iterator Graph::end_dfs(string str)
 {
     return make_itr(DFS, str);
 }
-Graph::iterator Graph::make_itr(int c, string str)
+Graph::my_iterator Graph::make_itr(int c, string str)
 {
     if(str.compare("$$$") == 0)
     {
-        return iterator(&graph_[graph_.size()-1], graph_, node_names_, c);
+        return my_iterator(&graph_[graph_.size()-1], graph_, node_names_, c);
     }
     else
     {
-        return iterator(&graph_[name_index_[str]], graph_, node_names_, c);
+        return my_iterator(&graph_[name_index_[str]], graph_, node_names_, c);
     }
 
 }
 
-vector<string> Graph::topo_sort(Graph::iterator start_pt,Graph::iterator end_pt)
+vector<string> Graph::topo_sort(Graph::my_iterator start_pt,Graph::my_iterator end_pt)
 {
     vector<string> sorted;
     while(start_pt != end_pt)
@@ -215,7 +219,7 @@ vector<string> Graph::topo_sort(Graph::iterator start_pt,Graph::iterator end_pt)
     return sorted;
 }
 
-Graph::iterator myfind(Graph::iterator first, Graph::iterator last, string val)
+Graph::my_iterator myfind(Graph::my_iterator first, Graph::my_iterator last, string val)
 {	
 	while(first != last)
 	{
@@ -243,7 +247,7 @@ int Graph::get_number_of_components(string city)
 }
 
 
-bool comp_graphs(Graph::iterator st1,Graph::iterator en1,Graph::iterator st2,Graph::iterator en2)
+bool comp_graphs(Graph::my_iterator st1,Graph::my_iterator en1,Graph::my_iterator st2,Graph::my_iterator en2)
 {
 	while(st1 != en1 && st2 != en2)
 	{

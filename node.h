@@ -14,7 +14,6 @@ class Node
         int name_;
         map<int, int> neighbours_;
         friend class Graph;
-        friend class bfs_iterator;
         
     public:
         //default constructor

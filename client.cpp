@@ -1,4 +1,5 @@
 #include "graph.h"
+#include "limits.h"
 
 vector<vector<int>> input_matrix(int N)
 {
@@ -54,20 +55,29 @@ void disp2(ptr first, ptr last)
 
 void djikstra(string src, Graph g)
 {
-    int N = g.get_size();
-	int src_ = g.get_index(src);
+    
+    int N = g.get_size();  //to get size of graph
+    int matrix[N][N];
+    for(int i=0; i<N; i++)
+	{
+	    for(int j=0; j<N; j++)
+	    {
+	        matrix[i][j] = 0;
+	    }
+	}
+	int src_ = g.get_index(src);    //to get index of source
 	int distances[N];
 	bool shortest_path_set[N];
 	for(int i=0; i<N; i++)
 	{
-		distances[i] = 999;
+		distances[i] = INT_MAX;
 		shortest_path_set[i] = false;		
 	}
 	distances[src_] = 0;
 	int min_v;
 	for(int i=0; i<N; i++)
 	{
-		int min = 999;
+		int min = INT_MAX;
 		min_v = -1;
 		for(int i=0; i<N; i++)
 		{
@@ -79,20 +89,23 @@ void djikstra(string src, Graph g)
 		}	
 		shortest_path_set[min_v] = true;
 		//update dists of all nbrs of min_v
-		for(auto k : g.get_neighbours(min_v))
+		for(auto k : g.get_neighbours(min_v))   //to get neighbour vector of src
 		{
-			if(shortest_path_set[k.first]==false && distances[min_v]!=999 
+			if(shortest_path_set[k.first]==false && distances[min_v]!=INT_MAX 
 				&& distances[k.first] > distances[min_v]+k.second)
 			{
 				distances[k.first] = distances[min_v]+k.second;
+				matrix[min_v][k.first] = distances[k.first];
 			}
 		}
 	}
 	for(int i=0; i<N; i++)
 	{
 		cout << g.get_value(src_) << " To " << g.get_value(i) << " --> " << distances[i] << "\n";
+		//to get name of nodes
 	}
-	cout << "\n";	
+	
+	cout << "\n";
 }
 
 int main()
@@ -148,5 +161,6 @@ int main()
     adjacency_matrix = input_matrix(N);
     Graph obj(adjacency_matrix, vertex_names);
 	djikstra("Mumbai", obj);
+	
     return 0;
 }
